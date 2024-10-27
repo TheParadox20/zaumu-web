@@ -4,7 +4,8 @@ import Logo from "@/app/UI/Logo"
 
 export default function Footer(){
     return(
-        <footer className="px-2 mt-10 pt-14 pb-8 bg-[#092330]">
+        <footer className="px-2 mt-10 pt-14 pb-8 dark:bg-[#092330]">
+            <div className="block dark:hidden border-b-2 mb-6 shadow-black"></div>
             <div className="flex flex-col md:flex-row md:justify-around  w-full md:mx-auto">
                 <div className="flex flex-grow md:justify-around gap-x-12">
                     <div>

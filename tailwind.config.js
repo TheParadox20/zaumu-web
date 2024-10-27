@@ -32,4 +32,5 @@ module.exports = {
   plugins: [
     addDynamicIconSelectors(),
   ],
+  darkMode: 'class',
 };

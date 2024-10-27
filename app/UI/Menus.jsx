@@ -1,5 +1,5 @@
 'use client'
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { Context } from "@/app/lib/ContextProvider";
 import Link from "next/link"
 import { usePathname} from "next/navigation";
@@ -7,8 +7,7 @@ import Logo from "@/app/UI/Logo";
 import { hide, show} from "@/app/lib/controlls";
 import { overlayE } from "@/app/lib/trigger";
 import useUser from "@/app/lib/hooks/useUser";
-import Search from "./Search";
-import Filter from "./Filter";
+import ThemeSwitch from "./Theme";
 
 export function MobileTopMenu(){
     return(
@@ -75,12 +74,31 @@ export function MobileSideMenu(){
 }
 
 export function TopMenu(){
+    const [showMenu, setShowMenu] = useState(true);
+    let scrollRef = useRef(0);
     let pathname = usePathname();
     const {isLoading,error, user } = useUser();
     let {isLogged} = useContext(Context);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY < scrollRef.current) {
+                setShowMenu(true);
+            } else {
+                setShowMenu(false);
+            }
+            scrollRef.current = window.scrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [scrollRef.current]);
     
     return(
-        <div className="hidden md:block bg-primary-dark z-30 py-3 2xl:py-5 px-4 sticky top-0">
+        <div className={`hidden md:block bg-primary-dark z-30 py-3 2xl:py-5 px-4 sticky top-0 transition-transform duration-300 ${showMenu ? 'transform translate-y-0' : 'transform -translate-y-full'}`}>
             <div className="flex justify-between px-5 items-center">
                 <Logo/>
                 <div className="flex gap-12 items-center">
@@ -94,10 +112,11 @@ export function TopMenu(){
                         </div>
                         :
                         <div className="flex gap-5">
-                            <Link href={'/login'} className="w-28 2xl:w-32 py-3 text-center rounded-lg font-semibold hover:scale-105" >Log In</Link>
+                            <Link href={'/login'} className="w-28 2xl:w-32 py-3 text-center rounded-lg font-semibold hover:scale-105 border-2 border-gray-300" >Log In</Link>
                             <Link href={'/join'} className="w-28 2xl:w-32 py-3 text-center rounded-lg font-semibold hover:scale-105 bg-blue-primary text-white">Register</Link>
                         </div>
                     }
+                    <ThemeSwitch/>
                 </div>
             </div>
         </div>
